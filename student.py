@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------
-# Author:
-# Date:
+# Author:Keren Thomas Muthiah
+# Date: 11/04/2023
 #
 # This module supports changes in the registered courses
 # for students in the class registration system.  It allows
