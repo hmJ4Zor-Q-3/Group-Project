@@ -3,11 +3,12 @@
 # Date: October 26th 2023
 # Description: A program allowing students to control their course registration.
 #
-from student import add_course, drop_course, list_courses
 from billing import display_bill
+from student import add_course, drop_course, list_courses
 
 
 def main():
+    # declare student and course data
     student_list = [('1001', '111'), ('1002', '222'),
                     ('1003', '333'), ('1004', '444'),
                     ('1005', '555'), ('1006', '666')]
@@ -32,10 +33,13 @@ def main():
                        'CSC104': 3, 'CSC105': 4}
 
     while True:
+        # get the user to login, or end program
         user_id = input("Enter ID to log in, or 0 to quit")
         if user_id == "0":
             break
 
+        # if the student can be logged in ask them to pick out a menu entry, 
+        # and then pass control to the relavent function if the provided code's a code from the menu
         if login(user_id, student_list):
             show_menu()
             code = input("What do you want to do? ")
@@ -51,10 +55,6 @@ def main():
             elif code == "4":
                 display_bill(id, student_in_state, course_roster, course_hours)
             print()
-            # use a loop to allow a student to choose to add courses,
-            # to drop courses,
-            # or list courses that the student has registered for,
-            # or if they would want to display a bill
 
 
 #
@@ -68,7 +68,9 @@ def main():
 #   the success/failure of the login attempt.
 #
 def login(id, s_list):
+    # ask user for the PIN too check against to the id
     pin = input("Enter PIN: ")
+    # confirm the id PIN pair matches any known student
     if s_list.__contains__((id, pin)):
         print("ID and PIN verified")
         return True
