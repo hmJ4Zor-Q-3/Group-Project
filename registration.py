@@ -1,6 +1,6 @@
 #
 # Name: Reagan Grantham
-# Date: October 26th 2023
+# Last Revision Date: November 7th 2023
 # Description: A program allowing students to control their course registration.
 #
 from billing import display_bill
@@ -34,26 +34,32 @@ def main():
 
     while True:
         # get the user to login, or end program
-        user_id = input("Enter ID to log in, or 0 to quit")
+        user_id = input("Enter ID to log in, or 0 to quit: ")
         if user_id == "0":
             break
 
         # if the student can be logged in ask them to pick out a menu entry, 
-        # and then pass control to the relavent function if the provided code's a code from the menu
+        # and then pass control to the relevant function if the provided code's a code from the menu
         if login(user_id, student_list):
             show_menu()
             code = input("What do you want to do? ")
             print()
-            if code == "0":
-                print("Session ended.")
-            elif code == "1":
-                add_course(id, course_roster, course_max_size)
-            elif code == "2":
-                drop_course(id, course_roster)
-            elif code == "3":
-                list_courses(id, course_roster)
-            elif code == "4":
-                display_bill(id, student_in_state, course_roster, course_hours)
+            while code != "0":
+
+                if code == "1":
+                    add_course(user_id, course_roster, course_max_size)
+                elif code == "2":
+                    drop_course(user_id, course_roster)
+                elif code == "3":
+                    list_courses(user_id, course_roster)
+                elif code == "4":
+                    display_bill(user_id, student_in_state, course_roster, course_hours)
+                show_menu()
+                code = input("What do you want to do? ")
+                print()
+            print("Session ended.")
+            print()
+        else:
             print()
 
 
@@ -67,11 +73,11 @@ def main():
 # Returns:
 #   the success/failure of the login attempt.
 #
-def login(id, s_list):
+def login(s_id, s_list):
     # ask user for the PIN too check against to the id
     pin = input("Enter PIN: ")
     # confirm the id PIN pair matches any known student
-    if s_list.__contains__((id, pin)):
+    if s_list.__contains__((s_id, pin)):
         print("ID and PIN verified")
         return True
     else:
