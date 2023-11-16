@@ -7,9 +7,9 @@
 # class records are reviewed and tuition fees are calculated.
 # -----------------------------------------------------------------
 import datetime
+from student import Student, Course
 
-
-def display_bill(s_id, s_in_state, c_rosters, c_hours):
+def display_bill(student_info, course_info):
     # ------------------------------------------------------------
     # This function displays the student's bill. It takes four
     # parameters: s_id, the student id; s_in_state, the list of
@@ -19,14 +19,14 @@ def display_bill(s_id, s_in_state, c_rosters, c_hours):
     # ------------------------------------------------------------
 
     # String assignment based on student status
-    if not s_in_state[s_id]:
+    if not student_info.student_in_state:
         status = 'Out-of-State Student'
     else:
         status = 'In-State Student'
 
     # Print first parts of the bill
     print('Tuition Summary')
-    print(f'Student: {s_id}, {status}')
+    print(f'Student: {student_info.s_id}, {status}')
 
     # Get the current data/time, convert and print in the right format
     right_now = datetime.datetime.now()
@@ -35,7 +35,7 @@ def display_bill(s_id, s_in_state, c_rosters, c_hours):
     print(right_now_str + '\n')
 
     # Generate the bill
-    s_courses = [course for course, ids in c_rosters.items() if str(s_id) in ids]  # Grab all relevant courses first
+    s_courses = [course for course, course_obj in course_info.items() if student_info.s_id in course_obj.course_roster]  # Grab all relevant courses first
     s_courses.sort()  # Sort the list just in case
 
     # Constants for cost calculation
@@ -52,8 +52,8 @@ def display_bill(s_id, s_in_state, c_rosters, c_hours):
 
     # Calculate and print the line for each course
     for course in s_courses:
-        hours = c_hours.get(course, 0)
-        cost = hours * (in_state_multiplier if s_in_state[s_id] else out_state_multiplier)
+        hours = course_info[course].course_hours
+        cost = hours * (in_state_multiplier if student_info.student_in_state else out_state_multiplier)
         total_hours += hours
         total_cost += cost
         # Align decimals by ensuring the width before the decimal is consistent
