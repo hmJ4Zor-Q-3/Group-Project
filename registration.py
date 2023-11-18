@@ -1,47 +1,18 @@
 #
 # Name: Reagan Grantham
-# Last Revision Date: November 7th 2023
+# Last Revision Date: November 16th 2023
 # Description: A program allowing students to control their course registration.
 #
-from student import Student, Course, add_course, drop_course, list_courses,  create_student_dict, create_course_dict
+import IO
 from billing import display_bill
+from course import add_course, drop_course, list_courses
 
 
 def main():
-
-    student_list = [('1001', '111'), ('1002', '222'),
-                    ('1003', '333'), ('1004', '444'),
-                    ('1005', '555'), ('1006', '666')]
-
-
-    student_in_state = {'1001': True,
-                        '1002': False,
-                        '1003': True,
-                        '1004': False,
-                        '1005': False,
-                        '1006': True}
-
-    # Create a dictionary of student objects.
-    # The dictionary has key = s_id, value = student_obj
-
-    student_info = create_student_dict(student_list, student_in_state)
-
-    course_hours = {'CSC101': 3, 'CSC102': 4, 'CSC103': 5,
-                    'CSC104': 3, 'CSC105': 2}
-
-    course_roster = {'CSC101': ['1004', '1003'],
-                     'CSC102': ['1001'],
-                     'CSC103': ['1002'],
-                     'CSC104': [],
-                     'CSC105': ['1005', '1002']}
-
-    course_max_size = {'CSC101': 3, 'CSC102': 2, 'CSC103': 1,
-                       'CSC104': 3, 'CSC105': 4}
-
-    # Create a dictionary of course objects.
-    # The dictionary has key = course_id, value = course obj
-
-    course_info = create_course_dict(course_hours, course_roster, course_max_size)
+    # Get student directory.
+    students = IO.get_student_registry()
+    # Load course directory.
+    courses = IO.get_course_registry(students)
 
     while True:
         # get the user to login, or end program
@@ -49,23 +20,27 @@ def main():
         if user_id == "0":
             break
 
+        if not students.__contains__(user_id):
+            print(f"\nNo user was found with the ID: {user_id}\n")
+            continue
+
+        student = students[user_id]
         # if the student can be logged in ask them to pick out a menu entry,
         # and then pass control to the relevant function if the provided code's a code from the menu
-        if login(user_id, student_info[user_id]):
+        if login(student):
             show_menu()
             code = input("What do you want to do? ")
             print()
             while code != "0":
 
-
                 if code == "1":
-                    add_course(user_id, course_info)
+                    add_course(student, courses)
                 elif code == "2":
-                    drop_course(user_id, course_info)
+                    drop_course(student, courses)
                 elif code == "3":
-                    list_courses(user_id, course_info)
+                    list_courses(student, courses)
                 elif code == "4":
-                    display_bill(student_info[user_id], course_info)
+                    display_bill(student, courses)
                 show_menu()
                 code = input("What do you want to do? ")
                 print()
@@ -77,16 +52,15 @@ def main():
 # A function to try to log in a student.
 #
 # Inputs:
-#   s_id - id of student trying to log in.
-#   student_info - The object of the student
+#   student_info - The student to log in.
 #
 # Returns:
 #   the success/failure of the login attempt.
 #
-def login(s_id, student_info):
+def login(student_info):
     # ask user for the PIN too check against to the id
     pin = input("Enter PIN: ")
-    if student_info.pin == pin:
+    if student_info.is_pin(pin):
         print("ID and PIN verified")
         return True
     else:
@@ -95,7 +69,7 @@ def login(s_id, student_info):
 
 
 #
-# A function which displays the action menu to the student that's logged in
+# A function which displays the action menu to the student that's logged in.
 #
 def show_menu():
     print("\nAction Menu"
