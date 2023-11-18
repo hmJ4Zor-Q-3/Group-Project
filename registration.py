@@ -9,10 +9,14 @@ from course import add_course, drop_course, list_courses
 
 
 def main():
-    # Get student directory.
-    students = IO.get_student_registry()
-    # Load course directory.
-    courses = IO.get_course_registry(students)
+    # Get the registries from disk, or if a predictable issue occurs fall back to the defaults
+    try:
+        students, courses = IO.read_registries()
+    except FileNotFoundError or KeyError as e:
+        print('Couldn\'t load course or student registry from the disk, using defaults instead.'
+              f'\nIntercepted error of the type: \"{type(e)}\", with the message: {e.__str__()}\n')
+        students = IO.get_default_student_registry()
+        courses = IO.get_default_course_registry()
 
     while True:
         # get the user to login, or end program
@@ -46,6 +50,7 @@ def main():
                 print()
             print("Session ended.")
             print()
+    IO.write_registries(students, courses)
 
 
 #
