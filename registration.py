@@ -16,7 +16,7 @@ def main():
         print('Couldn\'t load course or student registry from the disk, using defaults instead.'
               f'\nIntercepted error of the type: \"{type(e)}\", with the message: {e.__str__()}\n')
         students = IO.get_default_student_registry()
-        courses = IO.get_default_course_registry()
+        courses = IO.get_default_course_registry(students)
 
     while True:
         # get the user to login, or end program
