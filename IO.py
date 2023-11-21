@@ -91,8 +91,8 @@ def get_default_student_registry():
 # Returns:
 #   A dictionary of all courses keyed to their IDs, as defined by the instructor's original specification.
 #
-def get_default_course_registry():
-    student_registry = get_default_student_registry()
+def get_default_course_registry(student_registry):
+    # Slightly modified the function here
     course_hours = {'CSC101': 3, 'CSC102': 4, 'CSC103': 5,
                     'CSC104': 3, 'CSC105': 2}
 
