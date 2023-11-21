@@ -5,7 +5,7 @@
 #
 import IO
 from billing import display_bill
-from course import add_course, drop_course, list_courses
+from student import add_course, drop_course, list_courses
 
 
 def main():
